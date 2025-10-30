@@ -1,0 +1,992 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pastel Monthly Budgeter</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        :root {
+            --pastel-blue: #a7d0e0;
+            --pastel-green: #c9e4c5;
+            --pastel-purple: #d6d2e9;
+            --pastel-pink: #f9d5e5;
+            --pastel-yellow: #fef6cd;
+            --pastel-orange: #ffdfba;
+            --text-dark: #4a4a4a;
+            --shadow: rgba(0, 0, 0, 0.1);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #f8f9fa;
+            color: var(--text-dark);
+            line-height: 1.6;
+            padding: 20px;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        h1 {
+            color: #6c757d;
+            margin-bottom: 10px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 12px var(--shadow);
+            transition: transform 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+        }
+
+        .card-title {
+            font-size: 1.2rem;
+            margin-bottom: 15px;
+            color: #6c757d;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .settings-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .input-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+        }
+
+        input,
+        select,
+        button {
+            width: 100%;
+            padding: 10px 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 1rem;
+        }
+
+        button {
+            background-color: var(--pastel-blue);
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #8fbdd0;
+        }
+
+        button.danger {
+            background-color: #ff9c9c;
+        }
+
+        button.danger:hover {
+            background-color: #ff7b7b;
+        }
+
+        .expense-form {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        .calendar {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 8px;
+        }
+
+        .calendar-header {
+            grid-column: 1 / -1;
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            text-align: center;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .day {
+            background-color: white;
+            border-radius: 8px;
+            padding: 10px;
+            min-height: 80px;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+        .day-header {
+            font-size: 0.8rem;
+            text-align: center;
+            margin-bottom: 5px;
+            padding-bottom: 5px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .day-content {
+            flex-grow: 1;
+            font-size: 0.9rem;
+        }
+
+        .expense-dot {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            margin-right: 3px;
+        }
+
+        .payday {
+            background-color: var(--pastel-green);
+            border: 2px solid #9dc6a7;
+        }
+
+        .has-expenses {
+            background-color: var(--pastel-pink);
+        }
+
+        .charts-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .chart-container {
+            position: relative;
+            height: 300px;
+        }
+
+        .summary {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .summary-item {
+            text-align: center;
+            padding: 15px;
+            border-radius: 12px;
+        }
+
+        .summary-item.income {
+            background-color: var(--pastel-green);
+        }
+
+        .summary-item.expenses {
+            background-color: var(--pastel-pink);
+        }
+
+        .summary-item.balance {
+            background-color: var(--pastel-blue);
+        }
+
+        .summary-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-top: 5px;
+        }
+
+        .expense-list {
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .expense-item {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr auto;
+            gap: 10px;
+            padding: 10px;
+            border-bottom: 1px solid #eee;
+            align-items: center;
+        }
+
+        .expense-item:last-child {
+            border-bottom: none;
+        }
+
+        .category-badge {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            margin-right: 5px;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 30px;
+            color: #6c757d;
+        }
+
+        .empty-state i {
+            font-size: 3rem;
+            margin-bottom: 15px;
+            opacity: 0.5;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        @media (max-width: 768px) {
+            .expense-form {
+                grid-template-columns: 1fr;
+            }
+
+            .settings-container {
+                grid-template-columns: 1fr;
+            }
+
+            .expense-item {
+                grid-template-columns: 1fr;
+                text-align: center;
+            }
+        }
+
+        /* Pastel category colors */
+        .category-housing {
+            background-color: var(--pastel-blue);
+        }
+
+        .category-food {
+            background-color: var(--pastel-green);
+        }
+
+        .category-transport {
+            background-color: var(--pastel-yellow);
+        }
+
+        .category-subscriptions {
+            background-color: var(--pastel-purple);
+        }
+
+        .category-entertainment {
+            background-color: var(--pastel-pink);
+        }
+
+        .category-other {
+            background-color: var(--pastel-orange);
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <h1>🌷 Pastel Monthly Budgeter</h1>
+        <p>Track and visualize your monthly expenses</p>
+    </header>
+
+    <main>
+        <div class="settings-container">
+            <div class="card">
+                <h2 class="card-title">Monthly Settings</h2>
+                <div class="input-group">
+                    <label for="month-select">Month & Year</label>
+                    <input type="month" id="month-select" required>
+                </div>
+                <div class="input-group">
+                    <label for="income-input">Monthly Income</label>
+                    <input type="number" id="income-input" min="0" step="0.01" placeholder="0.00" required>
+                </div>
+                <div class="input-group">
+                    <label for="currency-select">Currency</label>
+                    <select id="currency-select">
+                        <option value="USD">USD ($)</option>
+                        <option value="EUR">EUR (€)</option>
+                        <option value="GBP">GBP (£)</option>
+                        <option value="JPY">JPY (¥)</option>
+                        <option value="CAD">CAD (C$)</option>
+                        <option value="AUD">AUD (A$)</option>
+                    </select>
+                </div>
+                <button id="save-settings">Save Settings</button>
+            </div>
+
+            <div class="card">
+                <h2 class="card-title">Add Expense</h2>
+                <form id="expense-form" class="expense-form">
+                    <div class="input-group">
+                        <label for="expense-name">Expense Name</label>
+                        <input type="text" id="expense-name" placeholder="e.g., Groceries" required>
+                    </div>
+                    <div class="input-group">
+                        <label for="expense-category">Category</label>
+                        <select id="expense-category" required>
+                            <option value="Housing">Housing</option>
+                            <option value="Food">Food</option>
+                            <option value="Transport">Transport</option>
+                            <option value="Subscriptions">Subscriptions</option>
+                            <option value="Entertainment">Entertainment</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+                    <div class="input-group">
+                        <label for="expense-amount">Amount</label>
+                        <input type="number" id="expense-amount" min="0.01" step="0.01" placeholder="0.00" required>
+                    </div>
+                    <div class="input-group">
+                        <label for="expense-date">Date</label>
+                        <input type="date" id="expense-date" required>
+                    </div>
+                    <div class="input-group">
+                        <label>&nbsp;</label>
+                        <button type="submit">Add Expense</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2 class="card-title">
+                Monthly Summary
+                <span id="selected-month">Select a month</span>
+            </h2>
+            <div class="summary">
+                <div class="summary-item income">
+                    <div>Income</div>
+                    <div class="summary-value" id="total-income">$0.00</div>
+                </div>
+                <div class="summary-item expenses">
+                    <div>Expenses</div>
+                    <div class="summary-value" id="total-expenses">$0.00</div>
+                </div>
+                <div class="summary-item balance">
+                    <div>Remaining</div>
+                    <div class="summary-value" id="remaining-balance">$0.00</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2 class="card-title">
+                Calendar View
+                <button id="today-btn">Today</button>
+            </h2>
+            <div class="calendar-header">
+                <div>Sun</div>
+                <div>Mon</div>
+                <div>Tue</div>
+                <div>Wed</div>
+                <div>Thu</div>
+                <div>Fri</div>
+                <div>Sat</div>
+            </div>
+            <div class="calendar" id="calendar-container">
+                <div class="empty-state">Select a month to view calendar</div>
+            </div>
+        </div>
+
+        <div class="charts-container">
+            <div class="card">
+                <h2 class="card-title">Spending by Category</h2>
+                <div class="chart-container">
+                    <canvas id="category-chart"></canvas>
+                </div>
+            </div>
+            <div class="card">
+                <h2 class="card-title">Daily Spending</h2>
+                <div class="chart-container">
+                    <canvas id="daily-chart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2 class="card-title">
+                Recent Expenses
+                <div class="action-buttons">
+                    <button id="export-btn">Export CSV</button>
+                    <button id="clear-btn" class="danger">Clear Month</button>
+                </div>
+            </h2>
+            <div class="expense-list" id="expense-list">
+                <div class="empty-state">
+                    <div>📝</div>
+                    <p>No expenses added yet</p>
+                    <p>Add your first expense to get started</p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // Data management
+        const BUDGET_DATA_KEY = 'monthlyBudgeterData';
+
+        let appState = {
+            selectedMonth: null,
+            income: 0,
+            currency: 'USD',
+            expenses: []
+        };
+
+        // DOM Elements
+        const monthSelect = document.getElementById('month-select');
+        const incomeInput = document.getElementById('income-input');
+        const currencySelect = document.getElementById('currency-select');
+        const saveSettingsBtn = document.getElementById('save-settings');
+        const expenseForm = document.getElementById('expense-form');
+        const calendarContainer = document.getElementById('calendar-container');
+        const expenseList = document.getElementById('expense-list');
+        const selectedMonthEl = document.getElementById('selected-month');
+        const totalIncomeEl = document.getElementById('total-income');
+        const totalExpensesEl = document.getElementById('total-expenses');
+        const remainingBalanceEl = document.getElementById('remaining-balance');
+        const exportBtn = document.getElementById('export-btn');
+        const clearBtn = document.getElementById('clear-btn');
+        const todayBtn = document.getElementById('today-btn');
+
+        // Chart instances
+        let categoryChart = null;
+        let dailyChart = null;
+
+        // Initialize the application
+        function init() {
+            loadData();
+            setupEventListeners();
+            setCurrentMonth();
+            updateUI();
+        }
+
+        // Load data from localStorage
+        function loadData() {
+            const savedData = localStorage.getItem(BUDGET_DATA_KEY);
+            if (savedData) {
+                try {
+                    const parsedData = JSON.parse(savedData);
+                    appState = { ...appState, ...parsedData };
+
+                    // Set form values from loaded data
+                    if (appState.selectedMonth) {
+                        monthSelect.value = appState.selectedMonth;
+                    }
+                    incomeInput.value = appState.income;
+                    currencySelect.value = appState.currency;
+                } catch (e) {
+                    console.error('Error parsing saved data:', e);
+                }
+            }
+        }
+
+        // Save data to localStorage
+        function saveData() {
+            localStorage.setItem(BUDGET_DATA_KEY, JSON.stringify(appState));
+        }
+
+        // Set up event listeners
+        function setupEventListeners() {
+            saveSettingsBtn.addEventListener('click', saveSettings);
+            expenseForm.addEventListener('submit', addExpense);
+            exportBtn.addEventListener('click', exportCSV);
+            clearBtn.addEventListener('click', clearMonthData);
+            todayBtn.addEventListener('click', setCurrentMonth);
+            monthSelect.addEventListener('change', handleMonthChange);
+        }
+
+        // Set current month in the month selector
+        function setCurrentMonth() {
+            const now = new Date();
+            const year = now.getFullYear();
+            const month = (now.getMonth() + 1).toString().padStart(2, '0');
+            monthSelect.value = `${year}-${month}`;
+            handleMonthChange();
+        }
+
+        // Handle month selection change
+        function handleMonthChange() {
+            appState.selectedMonth = monthSelect.value;
+            updateUI();
+            saveData();
+        }
+
+        // Save settings
+        function saveSettings() {
+            if (!monthSelect.value) {
+                alert('Please select a month first');
+                return;
+            }
+
+            appState.income = parseFloat(incomeInput.value) || 0;
+            appState.currency = currencySelect.value;
+            appState.selectedMonth = monthSelect.value;
+
+            updateUI();
+            saveData();
+            alert('Settings saved successfully!');
+        }
+
+        // Add a new expense
+        function addExpense(e) {
+            e.preventDefault();
+
+            if (!appState.selectedMonth) {
+                alert('Please select a month and save settings first');
+                return;
+            }
+
+            const name = document.getElementById('expense-name').value;
+            const category = document.getElementById('expense-category').value;
+            const amount = parseFloat(document.getElementById('expense-amount').value);
+            const date = document.getElementById('expense-date').value;
+
+            // Basic validation
+            if (!name || !category || isNaN(amount) || amount <= 0 || !date) {
+                alert('Please fill all fields with valid values');
+                return;
+            }
+
+            // Check if the expense date is in the selected month
+            const expenseDate = new Date(date);
+            const selectedDate = new Date(appState.selectedMonth + '-01');
+
+            if (expenseDate.getMonth() !== selectedDate.getMonth() ||
+                expenseDate.getFullYear() !== selectedDate.getFullYear()) {
+                if (!confirm('This expense is not in the selected month. Add it anyway?')) {
+                    return;
+                }
+            }
+
+            const newExpense = {
+                id: Date.now(),
+                name,
+                category,
+                amount,
+                date
+            };
+
+            appState.expenses.push(newExpense);
+            expenseForm.reset();
+
+            updateUI();
+            saveData();
+        }
+
+        // Update the entire UI based on current state
+        function updateUI() {
+            updateSelectedMonthDisplay();
+            updateSummary();
+            updateCalendar();
+            updateExpenseList();
+            updateCharts();
+        }
+
+        // Update the selected month display
+        function updateSelectedMonthDisplay() {
+            if (appState.selectedMonth) {
+                const date = new Date(appState.selectedMonth + '-01');
+                const monthName = date.toLocaleString('default', { month: 'long', year: 'numeric' });
+                selectedMonthEl.textContent = monthName;
+            } else {
+                selectedMonthEl.textContent = 'Select a month';
+            }
+        }
+
+        // Update the summary section
+        function updateSummary() {
+            const currencySymbol = getCurrencySymbol();
+            const totalExpenses = calculateTotalExpenses();
+
+            totalIncomeEl.textContent = `${currencySymbol}${appState.income.toFixed(2)}`;
+            totalExpensesEl.textContent = `${currencySymbol}${totalExpenses.toFixed(2)}`;
+            remainingBalanceEl.textContent = `${currencySymbol}${(appState.income - totalExpenses).toFixed(2)}`;
+        }
+
+        // Calculate total expenses for the selected month
+        function calculateTotalExpenses() {
+            if (!appState.selectedMonth) return 0;
+
+            const selectedDate = new Date(appState.selectedMonth + '-01');
+            return appState.expenses
+                .filter(expense => {
+                    const expenseDate = new Date(expense.date);
+                    return expenseDate.getMonth() === selectedDate.getMonth() &&
+                        expenseDate.getFullYear() === selectedDate.getFullYear();
+                })
+                .reduce((total, expense) => total + expense.amount, 0);
+        }
+
+        // Get expenses for the selected month
+        function getExpensesForSelectedMonth() {
+            if (!appState.selectedMonth) return [];
+
+            const selectedDate = new Date(appState.selectedMonth + '-01');
+            return appState.expenses.filter(expense => {
+                const expenseDate = new Date(expense.date);
+                return expenseDate.getMonth() === selectedDate.getMonth() &&
+                    expenseDate.getFullYear() === selectedDate.getFullYear();
+            });
+        }
+
+        // Update the calendar view
+        function updateCalendar() {
+            if (!appState.selectedMonth) {
+                calendarContainer.innerHTML = '<div class="empty-state">Select a month to view calendar</div>';
+                return;
+            }
+
+            const date = new Date(appState.selectedMonth + '-01');
+            const year = date.getFullYear();
+            const month = date.getMonth();
+
+            // Get first day of month and number of days
+            const firstDay = new Date(year, month, 1);
+            const lastDay = new Date(year, month + 1, 0);
+            const daysInMonth = lastDay.getDate();
+
+            // Create calendar header
+            let calendarHTML = '';
+
+            // Add empty cells for days before the first day of the month
+            for (let i = 0; i < firstDay.getDay(); i++) {
+                calendarHTML += '<div class="day"></div>';
+            }
+
+            // Add cells for each day of the month
+            const monthExpenses = getExpensesForSelectedMonth();
+
+            for (let day = 1; day <= daysInMonth; day++) {
+                const dayDate = new Date(year, month, day);
+                const dateString = dayDate.toISOString().split('T')[0];
+                const dayExpenses = monthExpenses.filter(expense => expense.date === dateString);
+                const totalDayExpenses = dayExpenses.reduce((sum, expense) => sum + expense.amount, 0);
+
+                let dayClass = 'day';
+                let dayContent = '';
+
+                // Highlight payday (27th)
+                if (day === 27) {
+                    dayClass += ' payday';
+                    dayContent += '<div class="day-content"><strong>Payday</strong></div>';
+                }
+
+                // Add expense indicators
+                if (dayExpenses.length > 0) {
+                    dayClass += ' has-expenses';
+                    dayContent += `<div class="day-content">${dayExpenses.length} expense(s)<br>Total: ${getCurrencySymbol()}${totalDayExpenses.toFixed(2)}</div>`;
+                }
+
+                calendarHTML += `
+                    <div class="${dayClass}">
+                        <div class="day-header">${day}</div>
+                        ${dayContent}
+                    </div>
+                `;
+            }
+
+            calendarContainer.innerHTML = calendarHTML;
+        }
+
+        // Update the expense list
+        function updateExpenseList() {
+            const monthExpenses = getExpensesForSelectedMonth();
+
+            if (monthExpenses.length === 0) {
+                expenseList.innerHTML = `
+                    <div class="empty-state">
+                        <div>📝</div>
+                        <p>No expenses for this month</p>
+                        <p>Add your first expense to get started</p>
+                    </div>
+                `;
+                return;
+            }
+
+            // Sort expenses by date (newest first)
+            monthExpenses.sort((a, b) => new Date(b.date) - new Date(a.date));
+
+            let expensesHTML = '';
+            monthExpenses.forEach(expense => {
+                const date = new Date(expense.date);
+                const formattedDate = date.toLocaleDateString();
+
+                expensesHTML += `
+                    <div class="expense-item">
+                        <div>${expense.name} <span class="category-badge category-${expense.category.toLowerCase()}">${expense.category}</span></div>
+                        <div>${formattedDate}</div>
+                        <div>${getCurrencySymbol()}${expense.amount.toFixed(2)}</div>
+                        <button class="delete-expense" data-id="${expense.id}">×</button>
+                    </div>
+                `;
+            });
+
+            expenseList.innerHTML = expensesHTML;
+
+            // Add event listeners to delete buttons
+            document.querySelectorAll('.delete-expense').forEach(button => {
+                button.addEventListener('click', function () {
+                    const id = parseInt(this.getAttribute('data-id'));
+                    deleteExpense(id);
+                });
+            });
+        }
+
+        // Delete an expense
+        function deleteExpense(id) {
+            if (confirm('Are you sure you want to delete this expense?')) {
+                appState.expenses = appState.expenses.filter(expense => expense.id !== id);
+                updateUI();
+                saveData();
+            }
+        }
+
+        // Update charts
+        function updateCharts() {
+            updateCategoryChart();
+            updateDailyChart();
+        }
+
+        // Update the category pie chart
+        function updateCategoryChart() {
+            const ctx = document.getElementById('category-chart').getContext('2d');
+            const monthExpenses = getExpensesForSelectedMonth();
+
+            if (categoryChart) {
+                categoryChart.destroy();
+            }
+
+            if (monthExpenses.length === 0) {
+                // Show a message when there's no data
+                ctx.font = '16px Arial';
+                ctx.fillStyle = '#6c757d';
+                ctx.textAlign = 'center';
+                ctx.fillText('No data available', ctx.canvas.width / 2, ctx.canvas.height / 2);
+                return;
+            }
+
+            // Group expenses by category
+            const categories = {};
+            monthExpenses.forEach(expense => {
+                if (!categories[expense.category]) {
+                    categories[expense.category] = 0;
+                }
+                categories[expense.category] += expense.amount;
+            });
+
+            const categoryLabels = Object.keys(categories);
+            const categoryData = Object.values(categories);
+
+            // Pastel colors for categories
+            const backgroundColors = [
+                '#a7d0e0', // Housing - pastel blue
+                '#c9e4c5', // Food - pastel green
+                '#fef6cd', // Transport - pastel yellow
+                '#d6d2e9', // Subscriptions - pastel purple
+                '#f9d5e5', // Entertainment - pastel pink
+                '#ffdfba'  // Other - pastel orange
+            ];
+
+            categoryChart = new Chart(ctx, {
+                type: 'pie',
+                data: {
+                    labels: categoryLabels,
+                    datasets: [{
+                        data: categoryData,
+                        backgroundColor: backgroundColors,
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom'
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function (context) {
+                                    const value = context.raw;
+                                    const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                                    const percentage = ((value / total) * 100).toFixed(1);
+                                    return `${context.label}: ${getCurrencySymbol()}${value.toFixed(2)} (${percentage}%)`;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        // Update the daily spending bar chart
+        function updateDailyChart() {
+            const ctx = document.getElementById('daily-chart').getContext('2d');
+            const monthExpenses = getExpensesForSelectedMonth();
+
+            if (dailyChart) {
+                dailyChart.destroy();
+            }
+
+            if (monthExpenses.length === 0) {
+                // Show a message when there's no data
+                ctx.font = '16px Arial';
+                ctx.fillStyle = '#6c757d';
+                ctx.textAlign = 'center';
+                ctx.fillText('No data available', ctx.canvas.width / 2, ctx.canvas.height / 2);
+                return;
+            }
+
+            if (!appState.selectedMonth) return;
+
+            const date = new Date(appState.selectedMonth + '-01');
+            const year = date.getFullYear();
+            const month = date.getMonth();
+            const daysInMonth = new Date(year, month + 1, 0).getDate();
+
+            // Initialize daily totals
+            const dailyTotals = {};
+            for (let day = 1; day <= daysInMonth; day++) {
+                dailyTotals[day] = 0;
+            }
+
+            // Calculate daily totals
+            monthExpenses.forEach(expense => {
+                const day = new Date(expense.date).getDate();
+                dailyTotals[day] += expense.amount;
+            });
+
+            // Prepare chart data
+            const dayLabels = Array.from({ length: daysInMonth }, (_, i) => i + 1);
+            const dailyData = dayLabels.map(day => dailyTotals[day]);
+
+            dailyChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: dayLabels,
+                    datasets: [{
+                        label: 'Daily Spending',
+                        data: dailyData,
+                        backgroundColor: '#a7d0e0',
+                        borderColor: '#8fbdd0',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: `Amount (${getCurrencySymbol()})`
+                            }
+                        },
+                        x: {
+                            title: {
+                                display: true,
+                                text: 'Day of Month'
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        // Export data as CSV
+        function exportCSV() {
+            const monthExpenses = getExpensesForSelectedMonth();
+
+            if (monthExpenses.length === 0) {
+                alert('No expenses to export for this month');
+                return;
+            }
+
+            // Create CSV content
+            let csvContent = 'Date,Name,Category,Amount\n';
+            monthExpenses.forEach(expense => {
+                const date = new Date(expense.date);
+                const formattedDate = date.toLocaleDateString();
+                csvContent += `"${formattedDate}","${expense.name}","${expense.category}",${expense.amount.toFixed(2)}\n`;
+            });
+
+            // Create download link
+            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.setAttribute('href', url);
+            link.setAttribute('download', `budget-${appState.selectedMonth}.csv`);
+            link.style.visibility = 'hidden';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+
+        // Clear month data
+        function clearMonthData() {
+            if (!appState.selectedMonth) {
+                alert('Please select a month first');
+                return;
+            }
+
+            if (!confirm('Are you sure you want to clear all data for this month? This cannot be undone.')) {
+                return;
+            }
+
+            // Remove expenses for the selected month
+            const selectedDate = new Date(appState.selectedMonth + '-01');
+            appState.expenses = appState.expenses.filter(expense => {
+                const expenseDate = new Date(expense.date);
+                return expenseDate.getMonth() !== selectedDate.getMonth() ||
+                    expenseDate.getFullYear() !== selectedDate.getFullYear();
+            });
+
+            // Reset income for the month
+            appState.income = 0;
+            incomeInput.value = '';
+
+            updateUI();
+            saveData();
+            alert('Month data cleared successfully');
+        }
+
+        // Get currency symbol based on selection
+        function getCurrencySymbol() {
+            switch (appState.currency) {
+                case 'USD': return '$';
+                case 'EUR': return '€';
+                case 'GBP': return '£';
+                case 'JPY': return '¥';
+                case 'CAD': return 'C$';
+                case 'AUD': return 'A$';
+                default: return '$';
+            }
+        }
+
+        // Initialize the app when the DOM is loaded
+        document.addEventListener('DOMContentLoaded', init);
+    </script>
+</body>
+
+</html>
