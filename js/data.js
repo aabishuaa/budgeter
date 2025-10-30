@@ -9,9 +9,10 @@ const MONTHLY_INCOME_JMD = 160000;
 // Default app state
 const defaultState = {
     currency: 'JMD',
+    monthlyIncome: MONTHLY_INCOME_JMD,
     expenses: [],
     budgets: {
-        Housing: 40000,
+        Housing: 50000,
         Food: 30000,
         Transport: 20000,
         Utilities: 15000,

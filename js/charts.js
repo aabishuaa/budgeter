@@ -13,8 +13,8 @@ let budgetChartInstance = null;
 function initCharts() {
     // Chart.js global defaults
     if (typeof Chart !== 'undefined') {
-        Chart.defaults.font.family = "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif";
-        Chart.defaults.color = '#4a4a4a';
+        Chart.defaults.font.family = "'Space Grotesk', 'Segoe UI', sans-serif";
+        Chart.defaults.color = '#475569';
     }
 }
 
@@ -44,8 +44,8 @@ function renderCategoryChart(expenses, elementId = 'categoryChart') {
 
     if (categories.length === 0) {
         // Show empty state
-        ctx.font = '16px Segoe UI';
-        ctx.fillStyle = '#999';
+        ctx.font = '16px Space Grotesk, Segoe UI, sans-serif';
+        ctx.fillStyle = '#94a3b8';
         ctx.textAlign = 'center';
         ctx.fillText('No expenses yet', canvas.width / 2, canvas.height / 2);
         return;
@@ -123,8 +123,8 @@ function renderTrendChart(trendData, elementId = 'trendChart') {
     const data = trendData.map(item => item.total);
 
     if (labels.length === 0) {
-        ctx.font = '16px Segoe UI';
-        ctx.fillStyle = '#999';
+        ctx.font = '16px Space Grotesk, Segoe UI, sans-serif';
+        ctx.fillStyle = '#94a3b8';
         ctx.textAlign = 'center';
         ctx.fillText('No data available', canvas.width / 2, canvas.height / 2);
         return;
@@ -137,14 +137,14 @@ function renderTrendChart(trendData, elementId = 'trendChart') {
             datasets: [{
                 label: 'Monthly Spending',
                 data: data,
-                borderColor: '#a7d0e0',
-                backgroundColor: 'rgba(167, 208, 224, 0.1)',
+                borderColor: '#2563eb',
+                backgroundColor: 'rgba(37, 99, 235, 0.1)',
                 borderWidth: 3,
                 fill: true,
                 tension: 0.4,
                 pointRadius: 5,
                 pointHoverRadius: 7,
-                pointBackgroundColor: '#a7d0e0',
+                pointBackgroundColor: '#2563eb',
                 pointBorderColor: '#fff',
                 pointBorderWidth: 2
             }]
@@ -206,8 +206,8 @@ function renderBudgetChart(expensesByCategory, budgets, elementId = 'budgetChart
     const colors = categories.map(cat => getCategoryColor(cat));
 
     if (categories.length === 0) {
-        ctx.font = '16px Segoe UI';
-        ctx.fillStyle = '#999';
+        ctx.font = '16px Space Grotesk, Segoe UI, sans-serif';
+        ctx.fillStyle = '#94a3b8';
         ctx.textAlign = 'center';
         ctx.fillText('No budget data', canvas.width / 2, canvas.height / 2);
         return;
