@@ -7,32 +7,34 @@
    CSS Variables & Root Styles
    ============================================ */
 :root {
-    /* Pastel Colors */
-    --pastel-blue: #a7d0e0;
-    --pastel-green: #c9e4c5;
-    --pastel-yellow: #fef6cd;
-    --pastel-purple: #d6d2e9;
-    --pastel-pink: #f9d5e5;
-    --pastel-coral: #ffb3c1;
-    --pastel-orange: #ffdfba;
-    --pastel-gray: #e0e0e0;
+    /* Vibrant Colors */
+    --vibrant-blue: #2563eb;
+    --vibrant-green: #10b981;
+    --vibrant-yellow: #f59e0b;
+    --vibrant-purple: #8b5cf6;
+    --vibrant-pink: #ec4899;
+    --vibrant-coral: #f43f5e;
+    --vibrant-orange: #f97316;
+    --vibrant-teal: #14b8a6;
+    --vibrant-indigo: #6366f1;
+    --vibrant-cyan: #06b6d4;
 
     /* UI Colors */
-    --bg-primary: #fafbfc;
+    --bg-primary: #f8fafc;
     --bg-secondary: #ffffff;
-    --text-primary: #2d3748;
-    --text-secondary: #718096;
-    --text-muted: #a0aec0;
+    --text-primary: #0f172a;
+    --text-secondary: #475569;
+    --text-muted: #94a3b8;
     --border-color: #e2e8f0;
-    --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.08);
-    --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.1);
-    --shadow-lg: 0 10px 30px rgba(0, 0, 0, 0.12);
+    --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.1);
+    --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.15);
+    --shadow-lg: 0 10px 30px rgba(0, 0, 0, 0.2);
 
     /* Status Colors */
-    --success: #51cf66;
-    --warning: #ffd43b;
-    --danger: #ff6b6b;
-    --info: #74c0fc;
+    --success: #10b981;
+    --warning: #f59e0b;
+    --danger: #ef4444;
+    --info: #3b82f6;
 
     /* Spacing */
     --spacing-xs: 0.25rem;
@@ -69,8 +71,7 @@ html {
 }
 
 body {
-    font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, 'Roboto', 'Oxygen',
-                 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+    font-family: 'Space Grotesk', 'Segoe UI', -apple-system, BlinkMacSystemFont, 'Roboto', sans-serif;
     background-color: var(--bg-primary);
     color: var(--text-primary);
     line-height: 1.6;
@@ -95,24 +96,26 @@ body {
 
 .bible-verse {
     font-size: 0.875rem;
-    color: var(--text-secondary);
+    color: white;
     font-style: italic;
     margin-bottom: var(--spacing-sm);
     padding: var(--spacing-md);
-    background: linear-gradient(135deg, var(--pastel-purple), var(--pastel-pink));
+    background: linear-gradient(135deg, var(--vibrant-purple), var(--vibrant-pink));
     border-radius: var(--radius-lg);
     display: inline-block;
+    font-weight: 500;
 }
 
 .app-title {
-    font-size: 2.5rem;
-    font-weight: 700;
+    font-size: 3rem;
+    font-weight: 800;
     color: var(--text-primary);
     margin-bottom: var(--spacing-sm);
-    background: linear-gradient(135deg, var(--pastel-blue), var(--pastel-purple));
+    background: linear-gradient(135deg, var(--vibrant-blue), var(--vibrant-purple), var(--vibrant-pink));
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
+    letter-spacing: -0.02em;
 }
 
 .app-subtitle {
@@ -125,11 +128,12 @@ body {
     display: inline-block;
     margin-top: var(--spacing-md);
     padding: var(--spacing-sm) var(--spacing-lg);
-    background-color: var(--pastel-blue);
-    color: var(--text-primary);
+    background: linear-gradient(135deg, var(--vibrant-blue), var(--vibrant-indigo));
+    color: white;
     border-radius: var(--radius-full);
-    font-weight: 600;
+    font-weight: 700;
     font-size: 0.875rem;
+    box-shadow: var(--shadow-md);
 }
 
 /* ============================================
@@ -187,7 +191,7 @@ body {
 }
 
 .card-title i {
-    color: var(--pastel-blue);
+    color: var(--vibrant-blue);
 }
 
 /* ============================================
@@ -218,23 +222,23 @@ body {
 }
 
 .income-card {
-    background: linear-gradient(135deg, var(--pastel-green), var(--bg-secondary));
-    border-color: var(--pastel-green);
+    background: linear-gradient(135deg, var(--vibrant-green), var(--bg-secondary));
+    border-color: var(--vibrant-green);
 }
 
 .spent-card {
-    background: linear-gradient(135deg, var(--pastel-pink), var(--bg-secondary));
-    border-color: var(--pastel-pink);
+    background: linear-gradient(135deg, var(--vibrant-coral), var(--bg-secondary));
+    border-color: var(--vibrant-coral);
 }
 
 .remaining-card {
-    background: linear-gradient(135deg, var(--pastel-blue), var(--bg-secondary));
-    border-color: var(--pastel-blue);
+    background: linear-gradient(135deg, var(--vibrant-blue), var(--bg-secondary));
+    border-color: var(--vibrant-blue);
 }
 
 .daily-card {
-    background: linear-gradient(135deg, var(--pastel-yellow), var(--bg-secondary));
-    border-color: var(--pastel-yellow);
+    background: linear-gradient(135deg, var(--vibrant-orange), var(--bg-secondary));
+    border-color: var(--vibrant-orange);
 }
 
 .summary-icon {
@@ -299,7 +303,7 @@ body {
     display: flex;
     align-items: center;
     gap: var(--spacing-md);
-    border-left: 4px solid var(--pastel-blue);
+    border-left: 4px solid var(--vibrant-blue);
 }
 
 .insight-card.success {
@@ -374,8 +378,8 @@ body {
 .form-select:focus,
 .form-textarea:focus {
     outline: none;
-    border-color: var(--pastel-blue);
-    box-shadow: 0 0 0 3px rgba(167, 208, 224, 0.2);
+    border-color: var(--vibrant-blue);
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
 }
 
 .form-textarea {
@@ -403,13 +407,14 @@ body {
 }
 
 .btn-primary {
-    background: linear-gradient(135deg, var(--pastel-blue), var(--pastel-purple));
-    color: var(--text-primary);
+    background: linear-gradient(135deg, var(--vibrant-blue), var(--vibrant-purple));
+    color: white;
 }
 
 .btn-primary:hover {
     transform: translateY(-2px);
     box-shadow: var(--shadow-md);
+    filter: brightness(1.1);
 }
 
 .btn-success {
@@ -512,7 +517,7 @@ body {
     align-items: start;
     gap: var(--spacing-md);
     transition: all var(--transition-fast);
-    border-left: 4px solid var(--pastel-blue);
+    border-left: 4px solid var(--vibrant-blue);
 }
 
 .expense-item:hover {
@@ -643,7 +648,7 @@ body {
 
 .budget-progress-fill {
     height: 100%;
-    background-color: var(--pastel-blue);
+    background: linear-gradient(90deg, var(--vibrant-blue), var(--vibrant-indigo));
     border-radius: var(--radius-full);
     transition: width var(--transition-slow);
 }
@@ -742,6 +747,110 @@ body {
 .notification i {
     width: 24px;
     height: 24px;
+}
+
+/* ============================================
+   Modal Dialog
+   ============================================ */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(4px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10000;
+    opacity: 0;
+    transition: opacity var(--transition-base);
+    pointer-events: none;
+}
+
+.modal-overlay.show {
+    opacity: 1;
+    pointer-events: all;
+}
+
+.modal {
+    background-color: var(--bg-secondary);
+    border-radius: var(--radius-xl);
+    box-shadow: var(--shadow-lg);
+    max-width: 500px;
+    width: 90%;
+    max-height: 90vh;
+    overflow-y: auto;
+    transform: scale(0.9) translateY(20px);
+    transition: transform var(--transition-base);
+}
+
+.modal-overlay.show .modal {
+    transform: scale(1) translateY(0);
+}
+
+.modal-header {
+    padding: var(--spacing-xl);
+    border-bottom: 2px solid var(--border-color);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.modal-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin: 0;
+}
+
+.modal-close {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--text-muted);
+    padding: var(--spacing-sm);
+    border-radius: var(--radius-md);
+    transition: all var(--transition-fast);
+}
+
+.modal-close:hover {
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
+}
+
+.modal-body {
+    padding: var(--spacing-xl);
+}
+
+.modal-footer {
+    padding: var(--spacing-lg) var(--spacing-xl);
+    border-top: 2px solid var(--border-color);
+    display: flex;
+    justify-content: flex-end;
+    gap: var(--spacing-md);
+}
+
+/* Editable value styles */
+.editable-value {
+    cursor: pointer;
+    padding: var(--spacing-xs) var(--spacing-sm);
+    border-radius: var(--radius-sm);
+    transition: all var(--transition-fast);
+    display: inline-block;
+    border: 2px solid transparent;
+}
+
+.editable-value:hover {
+    background-color: var(--bg-primary);
+    border-color: var(--vibrant-blue);
+}
+
+.edit-icon {
+    margin-left: var(--spacing-xs);
+    opacity: 0.6;
+    font-size: 0.875em;
 }
 
 /* ============================================

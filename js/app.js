@@ -112,14 +112,16 @@ function handleAddExpense(e) {
  * Handle deleting an expense
  */
 function handleDeleteExpense(id) {
-    if (!confirm('Are you sure you want to delete this expense?')) {
-        return;
-    }
-
-    appState = deleteExpense(appState, id);
-    saveData(appState);
-    showNotification('Expense deleted', 'success');
-    renderApp();
+    showConfirm(
+        'Are you sure you want to delete this expense? This action cannot be undone.',
+        'Delete Expense',
+        () => {
+            appState = deleteExpense(appState, id);
+            saveData(appState);
+            showNotification('Expense deleted successfully', 'success');
+            renderApp();
+        }
+    );
 }
 
 /**
@@ -155,21 +157,46 @@ function handleQuickExpense(e) {
 /**
  * Handle budget editing
  */
-function handleEditBudget(e) {
-    const category = e.target.dataset.category;
-    const currentBudget = appState.budgets[category] || 0;
-
-    const newBudget = prompt(
-        `Enter new budget for ${category}:`,
-        currentBudget.toString()
+function handleEditBudget(category, currentBudget) {
+    showPrompt(
+        `Enter new monthly budget for ${category}:`,
+        `Edit ${category} Budget`,
+        currentBudget.toString(),
+        (value) => {
+            if (value && !isNaN(value) && parseFloat(value) >= 0) {
+                appState = updateBudget(appState, category, value);
+                saveData(appState);
+                showNotification(`${category} budget updated successfully!`, 'success');
+                renderApp();
+            } else {
+                showAlert('Please enter a valid positive number', 'Invalid Input');
+            }
+        },
+        'number'
     );
+}
 
-    if (newBudget !== null && !isNaN(newBudget) && parseFloat(newBudget) >= 0) {
-        appState = updateBudget(appState, category, newBudget);
-        saveData(appState);
-        showNotification('Budget updated', 'success');
-        renderApp();
-    }
+/**
+ * Handle income editing
+ */
+function handleEditIncome() {
+    const currentIncome = appState.monthlyIncome || MONTHLY_INCOME_JMD;
+    showPrompt(
+        'Enter your monthly income:',
+        'Edit Monthly Income',
+        currentIncome.toString(),
+        (value) => {
+            if (value && !isNaN(value) && parseFloat(value) >= 0) {
+                appState.monthlyIncome = parseFloat(value);
+                saveData(appState);
+                showNotification('Monthly income updated successfully!', 'success');
+                renderApp();
+            } else {
+                showAlert('Please enter a valid positive number', 'Invalid Input');
+            }
+        },
+        'number'
+    );
 }
 
 /**
@@ -211,8 +238,9 @@ function renderApp() {
 function renderSummary() {
     const monthExpenses = getExpensesForMonth(appState, appState.currentMonth);
     const totalSpent = getTotalExpenses(appState, appState.currentMonth);
-    const remaining = MONTHLY_INCOME_JMD - totalSpent;
-    const percentSpent = calculatePercentage(totalSpent, MONTHLY_INCOME_JMD);
+    const income = appState.monthlyIncome || MONTHLY_INCOME_JMD;
+    const remaining = income - totalSpent;
+    const percentSpent = calculatePercentage(totalSpent, income);
 
     const summaryEl = document.getElementById('summary');
     if (!summaryEl) return;
@@ -225,7 +253,10 @@ function renderSummary() {
                 </div>
                 <div class="summary-content">
                     <div class="summary-label">Monthly Income</div>
-                    <div class="summary-value">${formatCurrency(MONTHLY_INCOME_JMD, 'JMD')}</div>
+                    <div class="summary-value editable-value" onclick="handleEditIncome()" title="Click to edit">
+                        ${formatCurrency(income, 'JMD')}
+                        <i data-lucide="edit-2" class="edit-icon" style="width: 14px; height: 14px;"></i>
+                    </div>
                 </div>
             </div>
 
@@ -420,7 +451,10 @@ function renderBudgetOverview() {
                     </div>
                     <div class="budget-amounts">
                         <span class="budget-spent">${formatCurrency(spent, 'JMD')}</span>
-                        <span class="budget-total">/ ${formatCurrency(budget, 'JMD')}</span>
+                        <span class="budget-total editable-value" onclick="handleEditBudget('${category}', ${budget})" title="Click to edit budget">
+                            / ${formatCurrency(budget, 'JMD')}
+                            <i data-lucide="edit-2" class="edit-icon" style="width: 12px; height: 12px;"></i>
+                        </span>
                     </div>
                 </div>
                 <div class="budget-progress">
@@ -429,7 +463,7 @@ function renderBudgetOverview() {
                     </div>
                     <div class="budget-percentage">${percentage.toFixed(0)}%</div>
                 </div>
-                <div class="budget-remaining" style="color: ${remaining >= 0 ? '#51cf66' : '#ff6b6b'}">
+                <div class="budget-remaining" style="color: ${remaining >= 0 ? '#10b981' : '#ef4444'}; font-weight: 600;">
                     ${remaining >= 0 ? formatCurrency(remaining, 'JMD') + ' left' : 'Over by ' + formatCurrency(Math.abs(remaining), 'JMD')}
                 </div>
             </div>

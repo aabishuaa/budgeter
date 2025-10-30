@@ -30,17 +30,17 @@ const CATEGORY_ICONS = {
 };
 
 /**
- * Category colors (pastel theme)
+ * Category colors (vibrant theme)
  */
 const CATEGORY_COLORS = {
-    Housing: '#a7d0e0',      // pastel blue
-    Food: '#c9e4c5',         // pastel green
-    Transport: '#fef6cd',    // pastel yellow
-    Utilities: '#d6d2e9',    // pastel purple
-    Entertainment: '#f9d5e5', // pastel pink
-    Healthcare: '#ffb3c1',   // pastel coral
-    Shopping: '#ffdfba',     // pastel orange
-    Other: '#e0e0e0'         // pastel gray
+    Housing: '#2563eb',      // vibrant blue
+    Food: '#10b981',         // vibrant green
+    Transport: '#f59e0b',    // vibrant orange
+    Utilities: '#8b5cf6',    // vibrant purple
+    Entertainment: '#ec4899', // vibrant pink
+    Healthcare: '#f43f5e',   // vibrant coral
+    Shopping: '#14b8a6',     // vibrant teal
+    Other: '#6366f1'         // vibrant indigo
 };
 
 /**
