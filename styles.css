@@ -1,40 +1,42 @@
 /**
  * Where the Money Goes - Stylesheet
- * Modern pastel money tracking application
+ * Natural earth-toned money tracking application
  */
 
 /* ============================================
    CSS Variables & Root Styles
    ============================================ */
 :root {
-    /* Vibrant Colors */
-    --vibrant-blue: #2563eb;
-    --vibrant-green: #10b981;
-    --vibrant-yellow: #f59e0b;
-    --vibrant-purple: #8b5cf6;
-    --vibrant-pink: #ec4899;
-    --vibrant-coral: #f43f5e;
-    --vibrant-orange: #f97316;
-    --vibrant-teal: #14b8a6;
-    --vibrant-indigo: #6366f1;
-    --vibrant-cyan: #06b6d4;
+    /* Earth Tone Colors - Greens */
+    --sage-green: #8A9A5B;
+    --forest-green: #556B2F;
+    --olive-green: #6B8E23;
+    --moss-green: #8F9779;
+    --light-green: #A4C2A5;
+
+    /* Earth Tone Colors - Browns */
+    --tan: #C19A6B;
+    --medium-brown: #8B7355;
+    --deep-brown: #6F4E37;
+    --light-tan: #D2B48C;
+    --warm-brown: #A0826D;
 
     /* UI Colors */
-    --bg-primary: #f8fafc;
-    --bg-secondary: #ffffff;
-    --text-primary: #0f172a;
-    --text-secondary: #475569;
-    --text-muted: #94a3b8;
-    --border-color: #e2e8f0;
-    --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.1);
-    --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.15);
-    --shadow-lg: 0 10px 30px rgba(0, 0, 0, 0.2);
+    --bg-primary: #FAF8F3;
+    --bg-secondary: #FFFFFF;
+    --text-primary: #3E3028;
+    --text-secondary: #6F5E52;
+    --text-muted: #9C8D82;
+    --border-color: #E8E3DB;
+    --shadow-sm: 0 1px 3px rgba(62, 48, 40, 0.1);
+    --shadow-md: 0 4px 12px rgba(62, 48, 40, 0.12);
+    --shadow-lg: 0 10px 30px rgba(62, 48, 40, 0.15);
 
     /* Status Colors */
-    --success: #10b981;
-    --warning: #f59e0b;
-    --danger: #ef4444;
-    --info: #3b82f6;
+    --success: #6B8E23;
+    --warning: #C19A6B;
+    --danger: #8B4513;
+    --info: #556B2F;
 
     /* Spacing */
     --spacing-xs: 0.25rem;
@@ -100,7 +102,7 @@ body {
     font-style: italic;
     margin-bottom: var(--spacing-sm);
     padding: var(--spacing-md);
-    background: linear-gradient(135deg, var(--vibrant-purple), var(--vibrant-pink));
+    background: linear-gradient(135deg, var(--forest-green), var(--sage-green));
     border-radius: var(--radius-lg);
     display: inline-block;
     font-weight: 500;
@@ -111,7 +113,7 @@ body {
     font-weight: 800;
     color: var(--text-primary);
     margin-bottom: var(--spacing-sm);
-    background: linear-gradient(135deg, var(--vibrant-blue), var(--vibrant-purple), var(--vibrant-pink));
+    background: linear-gradient(135deg, var(--forest-green), var(--olive-green), var(--medium-brown));
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
@@ -128,7 +130,7 @@ body {
     display: inline-block;
     margin-top: var(--spacing-md);
     padding: var(--spacing-sm) var(--spacing-lg);
-    background: linear-gradient(135deg, var(--vibrant-blue), var(--vibrant-indigo));
+    background: linear-gradient(135deg, var(--forest-green), var(--olive-green));
     color: white;
     border-radius: var(--radius-full);
     font-weight: 700;
@@ -191,7 +193,7 @@ body {
 }
 
 .card-title i {
-    color: var(--vibrant-blue);
+    color: var(--forest-green);
 }
 
 /* ============================================
@@ -222,23 +224,23 @@ body {
 }
 
 .income-card {
-    background: linear-gradient(135deg, var(--vibrant-green), var(--bg-secondary));
-    border-color: var(--vibrant-green);
+    background: linear-gradient(135deg, var(--olive-green), var(--bg-secondary));
+    border-color: var(--olive-green);
 }
 
 .spent-card {
-    background: linear-gradient(135deg, var(--vibrant-coral), var(--bg-secondary));
-    border-color: var(--vibrant-coral);
+    background: linear-gradient(135deg, var(--medium-brown), var(--bg-secondary));
+    border-color: var(--medium-brown);
 }
 
 .remaining-card {
-    background: linear-gradient(135deg, var(--vibrant-blue), var(--bg-secondary));
-    border-color: var(--vibrant-blue);
+    background: linear-gradient(135deg, var(--sage-green), var(--bg-secondary));
+    border-color: var(--sage-green);
 }
 
 .daily-card {
-    background: linear-gradient(135deg, var(--vibrant-orange), var(--bg-secondary));
-    border-color: var(--vibrant-orange);
+    background: linear-gradient(135deg, var(--tan), var(--bg-secondary));
+    border-color: var(--tan);
 }
 
 .summary-icon {
@@ -303,7 +305,7 @@ body {
     display: flex;
     align-items: center;
     gap: var(--spacing-md);
-    border-left: 4px solid var(--vibrant-blue);
+    border-left: 4px solid var(--forest-green);
 }
 
 .insight-card.success {
@@ -378,8 +380,8 @@ body {
 .form-select:focus,
 .form-textarea:focus {
     outline: none;
-    border-color: var(--vibrant-blue);
-    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+    border-color: var(--forest-green);
+    box-shadow: 0 0 0 3px rgba(85, 107, 47, 0.15);
 }
 
 .form-textarea {
@@ -407,7 +409,7 @@ body {
 }
 
 .btn-primary {
-    background: linear-gradient(135deg, var(--vibrant-blue), var(--vibrant-purple));
+    background: linear-gradient(135deg, var(--forest-green), var(--olive-green));
     color: white;
 }
 
@@ -423,7 +425,7 @@ body {
 }
 
 .btn-success:hover {
-    background-color: #40c057;
+    background-color: #7ba428;
     transform: translateY(-2px);
     box-shadow: var(--shadow-md);
 }
@@ -434,16 +436,16 @@ body {
 }
 
 .btn-danger:hover {
-    background-color: #fa5252;
+    background-color: #a0522d;
 }
 
 .btn-secondary {
-    background-color: var(--pastel-gray);
+    background-color: var(--light-tan);
     color: var(--text-primary);
 }
 
 .btn-secondary:hover {
-    background-color: #d0d0d0;
+    background-color: #c9ad8a;
 }
 
 .btn-icon {
@@ -462,7 +464,7 @@ body {
 }
 
 .btn-icon:hover {
-    background-color: var(--pastel-gray);
+    background-color: var(--border-color);
     color: var(--text-primary);
 }
 
@@ -517,7 +519,7 @@ body {
     align-items: start;
     gap: var(--spacing-md);
     transition: all var(--transition-fast);
-    border-left: 4px solid var(--vibrant-blue);
+    border-left: 4px solid var(--sage-green);
 }
 
 .expense-item:hover {
@@ -648,7 +650,7 @@ body {
 
 .budget-progress-fill {
     height: 100%;
-    background: linear-gradient(90deg, var(--vibrant-blue), var(--vibrant-indigo));
+    background: linear-gradient(90deg, var(--olive-green), var(--sage-green));
     border-radius: var(--radius-full);
     transition: width var(--transition-slow);
 }
@@ -844,7 +846,7 @@ body {
 
 .editable-value:hover {
     background-color: var(--bg-primary);
-    border-color: var(--vibrant-blue);
+    border-color: var(--forest-green);
 }
 
 .edit-icon {

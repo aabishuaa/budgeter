@@ -30,17 +30,17 @@ const CATEGORY_ICONS = {
 };
 
 /**
- * Category colors (vibrant theme)
+ * Category colors (earth tones)
  */
 const CATEGORY_COLORS = {
-    Housing: '#2563eb',      // vibrant blue
-    Food: '#10b981',         // vibrant green
-    Transport: '#f59e0b',    // vibrant orange
-    Utilities: '#8b5cf6',    // vibrant purple
-    Entertainment: '#ec4899', // vibrant pink
-    Healthcare: '#f43f5e',   // vibrant coral
-    Shopping: '#14b8a6',     // vibrant teal
-    Other: '#6366f1'         // vibrant indigo
+    Housing: '#6F4E37',      // deep brown
+    Food: '#6B8E23',         // olive green
+    Transport: '#C19A6B',    // tan
+    Utilities: '#8A9A5B',    // sage green
+    Entertainment: '#8B7355', // medium brown
+    Healthcare: '#556B2F',   // forest green
+    Shopping: '#D2B48C',     // light tan
+    Other: '#8F9779'         // moss green
 };
 
 /**
@@ -106,10 +106,10 @@ function calculatePercentage(part, whole) {
  */
 function getBudgetStatusColor(spent, budget) {
     const percentage = calculatePercentage(spent, budget);
-    if (percentage >= 100) return '#ff6b6b'; // red
-    if (percentage >= 80) return '#ffa94d';  // orange
-    if (percentage >= 60) return '#ffd43b';  // yellow
-    return '#51cf66'; // green
+    if (percentage >= 100) return '#8B4513'; // saddle brown (danger)
+    if (percentage >= 80) return '#C19A6B';  // tan (warning)
+    if (percentage >= 60) return '#D2B48C';  // light tan (caution)
+    return '#6B8E23'; // olive green (good)
 }
 
 /**

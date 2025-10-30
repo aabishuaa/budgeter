@@ -137,14 +137,14 @@ function renderTrendChart(trendData, elementId = 'trendChart') {
             datasets: [{
                 label: 'Monthly Spending',
                 data: data,
-                borderColor: '#2563eb',
-                backgroundColor: 'rgba(37, 99, 235, 0.1)',
+                borderColor: '#556B2F',
+                backgroundColor: 'rgba(85, 107, 47, 0.1)',
                 borderWidth: 3,
                 fill: true,
                 tension: 0.4,
                 pointRadius: 5,
                 pointHoverRadius: 7,
-                pointBackgroundColor: '#2563eb',
+                pointBackgroundColor: '#556B2F',
                 pointBorderColor: '#fff',
                 pointBorderWidth: 2
             }]
